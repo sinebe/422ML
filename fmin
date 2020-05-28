@@ -1,0 +1,45 @@
+from scipy.stats import logistic
+from scipy.optimize import fmin_bfgs
+
+pfun = logistic.cdf
+
+def fmin2(beta ):
+      
+    
+   
+    n = X.shape[0] #nobs
+    n = X.shape[0] #nobs
+    c = np.unique(y)
+    v = X.shape[1]
+ 
+#     print(v)
+#     theta = beta[:,pc:].flatten() #pc is ncolums and ind_q are levels. So thetas are 15,16,17
+    theta = beta[v:] #pc is ncolums and ind_q are levels. So thetas are 15,16,17
+
+#     print(beta)
+    
+#     gamm  =np.array([-np.Inf ,np.cumsum(np.append(theta[0],theta[1:])), np.Inf]) # vector of -inf cumsum and +inf
+#     inter = np.append(theta[0],np.exp(theta[1:]))    
+#     gamm0 = np.append(-np.Inf ,np.cumsum(inter))
+#     gamm  =np.append(gamm0,np.Inf)
+    
+    gamm = np.hstack(np.array([-np.inf, np.cumsum(np.append(theta[:1] ,np.exp(theta[1:]))), np.inf]))
+#     return gamm
+ 
+    
+    offset = 0
+    eta = offset
+#     return beta[:,:X.shape[1]].T
+    
+    eta = eta + (np.dot(X,-beta[:v])) #matrix multiplications with beta (non-intercepts) and drop matrix form
+    pr = pfun(np.minimum(100, gamm[y] - eta)) - pfun(np.maximum(-100, gamm[y-1] - eta))
+    
+#     print(pr)
+
+    if (np.all(pr > 0)):
+#         return -np.sum(wt*np.log(pr)) 
+
+        return -np.sum(np.log(pr)) 
+
+    else:
+        return np.Inf 
