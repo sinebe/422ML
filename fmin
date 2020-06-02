@@ -43,3 +43,63 @@ def fmin2(beta ):
 
     else:
         return np.Inf 
+
+
+
+
+def jacobian (theta): ## dgamma by dtheta matrix
+    k =  theta.shape[0]
+    etheta = np.exp(theta)
+    mat =  np.zeros((k, k))
+    mat = (mat + etheta) 
+    mat[:,0] = 1 
+    return np.tril(mat)
+
+jacobian(np.array([1.,3.,8.]))  
+
+
+def gmin(beta):       
+   
+    n = x.shape[0] 
+    n = x.shape[0] 
+    c = np.unique(y)
+    v = x.shape[1]
+ 
+    theta = beta[v:] 
+       
+    gamm = np.hstack(np.array([-np.inf, np.cumsum(np.append(theta[:1] ,np.exp(theta[1:]))), np.inf]))
+#     print(theta)
+
+    print(gamm)
+     
+    eta =  (np.dot(x,-beta[:v]))
+    
+    z1 = np.minimum(100, gamm[y] - eta)
+    z2 = np.maximum(-100, gamm[y-1] - eta)
+    pr = cdf(z1) - cdf(z2)  
+    
+    p1 = pdf(z1)
+    
+    p2 = pdf(z2)
+#     return x.shape, ((p1-p2)/pr).shape
+#     return ((p1-p2)/pr).reshape(-1,1)
+    g1 =  np.dot(x.T,((p1-p2)/pr).reshape(-1,1)) 
+ 
+    xx = polrY1.T*p1 - polrY2.T*p2
+#     return(xx.T )
+    g2 =  np.dot(-xx,1/pr)
+   
+    g2 = np.dot(g2, jacobian(theta))
+#     return g2
+    return np.append(g1,g2)
+ 
+    
+c = np.unique(y)
+q = c.shape[0]
+c[:q-1]
+Y =np.zeros((y.shape[0],q-1)) + c[:q-1]    
+    
+polrY1  = Y==y[:,None] 
+polrY2  = Y==y[:,None]-1
+
+gmin(s1)
