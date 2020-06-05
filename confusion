@@ -1,0 +1,12 @@
+#Confusion Matrix RFC-PCA
+cm_trn_pca = confusion_matrix(y_pca_trn, rfc_pca.predict(X_pca_trn))
+cm_trn_pca_plt=sns.heatmap(cm_trn_pca.T, square=True, annot=True, fmt='d', cbar=False, cmap="Blues")
+plt.xlabel('Actual label')
+plt.ylabel('Predicted label')
+plt.title("Training");
+fig4 = cm_trn_pca_plt.get_figure()
+fig4.show()
+fig4.savefig('TrainPCACM.png', 
+        bbox_inches = 'tight', dpi=None, facecolor='w', edgecolor='b', 
+        orientation='portrait', papertype=None, format=None, 
+        transparent=True, pad_inches=0.25)
